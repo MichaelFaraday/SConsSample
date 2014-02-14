@@ -1,0 +1,37 @@
+# python
+
+import os
+
+Import('env')
+
+env.MyPrint()
+
+staticLibs = [ 'staticLib' ]
+dynamicLibs = [ 'dynamicLib' ]
+allLibs = staticLibs + dynamicLibs
+
+CPPPATH = allLibs
+LIBS = allLibs + ['pthread', 'dl']
+LIBPATH = staticLibs + [ env['X_RUNTIME_DSO_PATH'] ]
+RPATH = env['X_RUNTIME_DSO_DIR'] 
+
+for dir in allLibs :
+  env.SConscript(os.path.join(dir, 'SConscript'))
+env.SConscript(os.path.join('dynamicLib2', 'SConscript')) # this will be loaded in runtime
+
+env['PROG_NAME_MAIN']='main'
+env['PROG_NAME_LAUNCHER']='launcher'
+
+env.Program( os.path.join(env['X_RUNTIME_PATH'], '${PROG_NAME_MAIN}'),
+             'main.cpp',
+             CPPPATH = CPPPATH,
+             LIBS = LIBS,
+             LIBPATH = LIBPATH,
+             RPATH = RPATH )
+
+env.Program( os.path.join(env['X_RUNTIME_PATH'], '${PROG_NAME_LAUNCHER}'),
+             'launcher.cpp',
+             CPPDEFINES = {'PROG_NAME_MAIN' : '\\\"${PROG_NAME_MAIN}\\\"' } ) # equal to gcc -DPROG_NAME_MAIN=\"main\"
+
+Export('env')
+

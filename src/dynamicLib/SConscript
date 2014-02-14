@@ -1,0 +1,8 @@
+# python
+
+import os
+
+Import('env')
+
+obj = env.SharedLibrary(os.path.join(env['X_RUNTIME_DSO_PATH'], 'dynamicLib'),
+                        'classInDynamicLib.cpp')
