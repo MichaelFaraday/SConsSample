@@ -8,7 +8,7 @@ from SCons.Script.SConscript import SConsEnvironment
 class MyEnvironment(SConsEnvironment):
   def __init__(self, **kw):
     SConsEnvironment.__init__(self, **kw)
-    self.Append(CXXFLAGS='-std=c++11')
+    self.Append(CXXFLAGS='-std=gnu++11')
   def newMethod():
     pass
 
