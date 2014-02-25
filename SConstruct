@@ -16,14 +16,12 @@ env = MyEnvironment()
 
 # Sample: add customization items into environment
 env['X_RUNTIME_PATH'] = os.path.join( os.path.abspath('.'), 'runtime' )   # absolute path
-env['X_RUNTIME_DSO_DIR'] = 'dso'
-env['X_RUNTIME_DSO_PATH'] = os.path.join( env['X_RUNTIME_PATH'], env['X_RUNTIME_DSO_DIR'] )
 
 # Sample: add method into environment
 #
 def MyPrint(env):
   print("Hello, MyPrint.\nCXXFLAGS=%s" % env['CXXFLAGS'])
-  print('runtime path = [%s], dso path = [%s]' % ( env['X_RUNTIME_PATH'], env['X_RUNTIME_DSO_PATH'] ))
+  print('runtime path = [%s]' % env['X_RUNTIME_PATH'] )
 env.AddMethod(MyPrint,'MyPrint')
 
 # Sample: add option

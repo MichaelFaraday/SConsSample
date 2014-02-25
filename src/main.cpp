@@ -50,9 +50,9 @@ int main(int argc, char* argv[])
 
   // case: load dynamic library in runtime ( like "LoadLibrary()" in Windows )
 #if defined _WIN32 || defined _WIN64
-  HMODULE handle = LoadLibraryA("./dso/dynamicLib2.dll");
+  HMODULE handle = LoadLibraryA("./dynamicLib2.dll");
 #else
-  void* handle = dlopen("./dso/libdynamicLib2.so", RTLD_LAZY);
+  void* handle = dlopen("./libdynamicLib2.so", RTLD_LAZY);
 #endif
   if ( handle == NULL )
   {

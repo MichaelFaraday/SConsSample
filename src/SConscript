@@ -12,8 +12,8 @@ allLibs = staticLibs + dynamicLibs
 
 CPPPATH = allLibs
 LIBS = allLibs + ['pthread', 'dl']
-LIBPATH = staticLibs + [ env['X_RUNTIME_DSO_PATH'] ]
-RPATH = env['X_RUNTIME_DSO_DIR'] 
+LIBPATH = staticLibs + [ env['X_RUNTIME_PATH'] ]
+RPATH = ['.'] 
 
 for dir in allLibs :
   env.SConscript(os.path.join(dir, 'SConscript'))

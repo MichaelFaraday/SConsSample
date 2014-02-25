@@ -4,5 +4,5 @@ import os
 
 Import('env')
 
-env.SharedLibrary(os.path.join(env['X_RUNTIME_DSO_PATH'], 'dynamicLib2'),
+env.SharedLibrary(os.path.join(env['X_RUNTIME_PATH'], 'dynamicLib2'),
                   'lib.cpp')
