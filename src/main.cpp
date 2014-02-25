@@ -1,19 +1,25 @@
 #include "classInStaticLib.h"
 #include "classInDynamicLib.h"
 
+#include <cstdio>
 #include <iostream>
 
 #include <pthread.h>
 #include <string.h>
 
-#include <dlfcn.h>
+#if defined _WIN32 || defined _WIN64
+#include <windows.h>  // LoadLibrary, FreeLibrary, GetProcAddress
+#else
+#include <dlfcn.h>    // dlopen, dlclose, dlsym
+#endif
+
+
 
 typedef int(*SumFunc)(int, int);
 
 void* threadFunc(void*)
 {
-  pthread_t tid = pthread_self();
-  std::cout << "threadFunc : id=" << tid << std::endl;
+  std::cout << "threadFunc" << std::endl;
 
   return NULL;
 }
@@ -43,14 +49,22 @@ int main(int argc, char* argv[])
   }
 
   // case: load dynamic library in runtime ( like "LoadLibrary()" in Windows )
+#if defined _WIN32 || defined _WIN64
+  HMODULE handle = LoadLibraryA("./dso/dynamicLib2.dll");
+#else
   void* handle = dlopen("./dso/libdynamicLib2.so", RTLD_LAZY);
+#endif
   if ( handle == NULL )
   {
     std::cerr << "dlopen() failed." << std::endl;
   }
   else
   {
+#if defined _WIN32 || defined _WIN64
+    SumFunc func = reinterpret_cast<SumFunc>(GetProcAddress(handle, "mySum"));
+#else
     SumFunc func = reinterpret_cast<SumFunc>(dlsym(handle, "mySum"));
+#endif
     if(func)
     {
       const int a = 1, b = 2;
@@ -58,10 +72,14 @@ int main(int argc, char* argv[])
     }
     else
     {
-      std::cerr << "dlsym() failed." << std::endl;
+      std::cerr << "dlsym()/GetProcAddress() failed." << std::endl;
     }
 
+#if defined _WIN32 || defined _WIN64
+    FreeLibrary(handle);
+#else
     dlclose(handle);
+#endif
   }
 
   return 0;
